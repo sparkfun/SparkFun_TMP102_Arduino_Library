@@ -1,4 +1,25 @@
-#include "TMP102.h"
+/******************************************************************************
+SparkFunTMP102.cpp
+SparkFunTMP102 Library Source File
+Alex Wende @ SparkFun Electronics
+Original Creation Date: April 29, 2016
+https://github.com/sparkfun/Digital_Temperature_Sensor_Breakout_-_TMP102
+
+This file implements all functions of the TMP102 class. Functions here range
+from reading the temperature from the sensor, to reading and writing various
+settings in the sensor.
+
+Development environment specifics:
+	IDE: Arduino 1.6
+	Hardware Platform: Arduino Uno
+	LSM9DS1 Breakout Version: 1.0
+
+This code is beerware; if you see me (or any other SparkFun employee) at the
+local, and you've found our code helpful, please buy us a round!
+
+Distributed as-is; no warranty is given.
+******************************************************************************/
+#include "SparkFunTMP102.h"
 #include <Wire.h>
 
 #define TEMPERATURE_REGISTER 0x00
@@ -13,23 +34,28 @@ TMP102::TMP102(byte address)
   _address = address;
 }
 
+void TMP102::begin(void)
+{
+  Wire.begin();  // Join I2C bus
+}
+
 
 void TMP102::openPointerRegister(byte pointerReg)
 { 
   Wire.beginTransmission(_address); // Connect to TMP102
-  Wire.write(pointerReg); // open specified register
+  Wire.write(pointerReg); // Open specified register
   Wire.endTransmission(); // Close communication with TMP102
 }
 
 
 byte TMP102::readRegister(bool registerNumber){  
-  byte registerByte[2];	// We'll store the data from the registers here
+  int registerByte[2];	// We'll store the data from the registers here
   
-  //read current configuration register value
-  Wire.requestFrom(_address, 2); 	// read two bytes from TMP102
+  // Read current configuration register value
+  Wire.requestFrom(_address, 2); 	// Read two bytes from TMP102
   Wire.endTransmission();
-  registerByte[0] = (Wire.read());	// read first byte
-  registerByte[1] = (Wire.read());	// read second byte
+  registerByte[0] = (Wire.read());	// Read first byte
+  registerByte[1] = (Wire.read());	// Read second byte
   
   return registerByte[registerNumber];
 }
@@ -37,23 +63,23 @@ byte TMP102::readRegister(bool registerNumber){
 
 float TMP102::readTempC(void)
 {
-  byte registerByte[2];	// Store the data from the register here
+  int registerByte[2];	// Store the data from the register here
   int digitalTemp;  // Temperature stored in TMP102 register
   
-  // read Temperature
+  // Read Temperature
   // Change pointer address to temperature register (0)
   openPointerRegister(TEMPERATURE_REGISTER);
-  // read from temperature register
+  // Read from temperature register
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
 
-  // bit 0 of second byte will always be 0 in 12-bit readings and 1 in 13-bit
+  // Bit 0 of second byte will always be 0 in 12-bit readings and 1 in 13-bit
   if(registerByte[1]&0x01)	// 13 bit mode
   {
 	// Combine bytes to create a signed int
     digitalTemp = ((registerByte[0]) << 5) | (registerByte[1] >> 3);
-	/* Temperature data can be + or -, if it should be negative,
-	   convert 13 bit to 16 bit and use the 2s compliment. */
+	// Temperature data can be + or -, if it should be negative,
+	// convert 13 bit to 16 bit and use the 2s compliment.
     if(digitalTemp > 0xFFF)
 	{
       digitalTemp |= 0xE000;
@@ -61,10 +87,10 @@ float TMP102::readTempC(void)
   }
   else	// 12 bit mode
   {
-	// combine bytes to create a signed int 
+	// Combine bytes to create a signed int 
     digitalTemp = ((registerByte[0]) << 4) | (registerByte[1] >> 4);
-	/* Temperature data can be + or -, if it should be negative,
-	   convert 12 bit to 16 bit and use the 2s compliment. */
+	// Temperature data can be + or -, if it should be negative,
+	// convert 12 bit to 16 bit and use the 2s compliment.
     if(digitalTemp > 0x7FF)
 	{
       digitalTemp |= 0xF000;
@@ -83,13 +109,13 @@ float TMP102::readTempF(void)
 
 void TMP102::setConversionRate(byte rate)
 {
-  byte registerByte[2]; // Store the data from the register here
+  int registerByte[2]; // Store the data from the register here
   rate = rate&0x03; // Make sure rate is not set higher than 3.
   
   // Change pointer address to configuration register (0x01)
   openPointerRegister(CONFIG_REGISTER);
   
-  // read current configuration register value
+  // Read current configuration register value
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
 
@@ -108,12 +134,12 @@ void TMP102::setConversionRate(byte rate)
 
 void TMP102::setExtendedMode(bool mode) 
 {
-  byte registerByte[2]; // Store the data from the register here
+  int registerByte[2]; // Store the data from the register here
 
   // Change pointer address to configuration register (0x01)
   openPointerRegister(CONFIG_REGISTER);
   
-  // read current configuration register value
+  // Read current configuration register value
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
 
@@ -137,7 +163,7 @@ void TMP102::sleep(void)
   // Change pointer address to configuration register (0x01)
   openPointerRegister(CONFIG_REGISTER);
   
-  // read current configuration register value
+  // Read current configuration register value
   registerByte = readRegister(0);
 
   registerByte |= 0x01;	// Set SD (bit 0 of first byte)
@@ -145,8 +171,8 @@ void TMP102::sleep(void)
   // Set configuration register
   Wire.beginTransmission(_address);
   Wire.write(CONFIG_REGISTER);	// Point to configuration register
-  Wire.write(registerByte); // Write first byte
-  Wire.endTransmission(); 	// Close communication with TMP102
+  Wire.write(registerByte);     // Write first byte
+  Wire.endTransmission(); 	    // Close communication with TMP102
 }
 
 
@@ -157,7 +183,7 @@ void TMP102::wakeup(void)
   // Change pointer address to configuration register (1)
   openPointerRegister(CONFIG_REGISTER);
   
-  // read current configuration register value
+  // Read current configuration register value
   registerByte = readRegister(0);
 
   registerByte &= 0xFE;	// Clear SD (bit 0 of first byte)
@@ -165,8 +191,8 @@ void TMP102::wakeup(void)
   // Set configuration registers
   Wire.beginTransmission(_address);
   Wire.write(CONFIG_REGISTER);	// Point to configuration register
-  Wire.write(registerByte);	// Write first byte
-  Wire.endTransmission(); 	// Close communication with TMP102
+  Wire.write(registerByte);	    // Write first byte
+  Wire.endTransmission(); 	    // Close communication with TMP102
 }
 
 
@@ -177,7 +203,7 @@ void TMP102::setAlertPolarity(bool polarity)
   // Change pointer address to configuration register (1)
   openPointerRegister(CONFIG_REGISTER);
   
-  // read current configuration register value
+  // Read current configuration register value
   registerByte = readRegister(0);
 
   // Load new value for polarity
@@ -187,8 +213,8 @@ void TMP102::setAlertPolarity(bool polarity)
   // Set configuration register
   Wire.beginTransmission(_address);
   Wire.write(CONFIG_REGISTER);	// Point to configuration register
-  Wire.write(registerByte);	// Write first byte
-  Wire.endTransmission(); 	// Close communication with TMP102
+  Wire.write(registerByte);	    // Write first byte
+  Wire.endTransmission(); 	    // Close communication with TMP102
 }
 
 
@@ -199,7 +225,7 @@ bool TMP102::alert(void)
   // Change pointer address to configuration register (1)
   openPointerRegister(CONFIG_REGISTER);
   
-  // read current configuration register value
+  // Read current configuration register value
   registerByte = readRegister(1);
   
   registerByte &= 0x20;	// Clear everything but the alert bit (bit 5)
@@ -209,18 +235,28 @@ bool TMP102::alert(void)
 
 void TMP102::setLowTempC(float temperature)
 {
-  byte registerByte[2];	// Store the data from the register here
+  int registerByte[2];	// Store the data from the register here
   bool extendedMode;	// Store extended mode bit here 0:-55C to +128C, 1:-55C to +150C
   
-  //Check if temperature should be 12 or 13 bits
-  openPointerRegister(CONFIG_REGISTER);	// read configuration register settings
+  // Prevent temperature from exceeding 150C or -55C
+  if(temperature > 150.0f)
+  {
+    temperature = 150.0f;
+  }
+  if(temperature < -55.0)
+  {
+    temperature = -55.0f;
+  }
   
-  // read current configuration register value
+  //Check if temperature should be 12 or 13 bits
+  openPointerRegister(CONFIG_REGISTER);	// Read configuration register settings
+  
+  // Read current configuration register value
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
   extendedMode = (registerByte[1]&0x10)>>4;	// 0 - temp data will be 12 bits
                                             // 1 - temp data will be 13 bits
-											
+
   // Convert analog temperature to digital value
   temperature = temperature/0.0625;
   
@@ -247,17 +283,28 @@ void TMP102::setLowTempC(float temperature)
 
 void TMP102::setHighTempC(float temperature)
 {
-  byte registerByte[2];	// Store the data from the register here
+  int registerByte[2];	// Store the data from the register here
   bool extendedMode;	// Store extended mode bit here 0:-55C to +128C, 1:-55C to +150C
   
-  //Check if temperature should be 12 or 13 bits
-  openPointerRegister(CONFIG_REGISTER);	// read configuration register settings
-  // read current configuration register value
+  // Prevent temperature from exceeding 150C
+  if(temperature > 150.0f)
+  {
+    temperature = 150.0f;
+  }
+  if(temperature < -55.0)
+  {
+    temperature = -55.0f;
+  }
+  
+  // Check if temperature should be 12 or 13 bits
+  openPointerRegister(CONFIG_REGISTER);	// Read configuration register settings
+  
+  // Read current configuration register value
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
   extendedMode = (registerByte[1]&0x10)>>4;	// 0 - temp data will be 12 bits
-											// 1 - temp data will be 13 bits
-											
+                                            // 1 - temp data will be 13 bits
+
   // Convert analog temperature to digital value
   temperature = temperature/0.0625;
   
@@ -298,18 +345,18 @@ void TMP102::setHighTempF(float temperature)
 
 float TMP102::readLowTempC(void)
 {
-  byte registerByte[2];	// Store the data from the register here
+  int registerByte[2];	// Store the data from the register here
   bool extendedMode;	// Store extended mode bit here 0:-55C to +128C, 1:-55C to +150C
   int digitalTemp;		// Store the digital temperature value here
   float temperature;	// Store the analog temperature value here
   
-  //Check if temperature should be 12 or 13 bits
-  openPointerRegister(CONFIG_REGISTER);	// read configuration register settings
-  // read current configuration register value
+  // Check if temperature should be 12 or 13 bits
+  openPointerRegister(CONFIG_REGISTER);	// Read configuration register settings
+  // Read current configuration register value
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
   extendedMode = (registerByte[1]&0x10)>>4;	// 0 - temp data will be 12 bits
-											                      // 1 - temp data will be 13 bits
+                                            // 1 - temp data will be 13 bits
   openPointerRegister(T_LOW_REGISTER);
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
@@ -318,8 +365,8 @@ float TMP102::readLowTempC(void)
   {
 	// Combine bytes to create a signed int
     digitalTemp = ((registerByte[0]) << 5) | (registerByte[1] >> 3);
-	/* Temperature data can be + or -, if it should be negative,
-	   convert 13 bit to 16 bit and use the 2s compliment. */
+	// Temperature data can be + or -, if it should be negative,
+	// convert 13 bit to 16 bit and use the 2s compliment.
     if(digitalTemp > 0xFFF)
 	{
       digitalTemp |= 0xE000;
@@ -327,10 +374,10 @@ float TMP102::readLowTempC(void)
   }
   else	// 12 bit mode
   {
-	// combine bytes to create a signed int 
+	// Combine bytes to create a signed int 
     digitalTemp = ((registerByte[0]) << 4) | (registerByte[1] >> 4);
-	/* Temperature data can be + or -, if it should be negative,
-	   convert 12 bit to 16 bit and use the 2s compliment. */
+	// Temperature data can be + or -, if it should be negative,
+	// convert 12 bit to 16 bit and use the 2s compliment.
     if(digitalTemp > 0x7FF)
 	{
       digitalTemp |= 0xF000;
@@ -343,14 +390,14 @@ float TMP102::readLowTempC(void)
 
 float TMP102::readHighTempC(void)
 {
-  byte registerByte[2];	// Store the data from the register here
+  int registerByte[2];	// Store the data from the register here
   bool extendedMode;	// Store extended mode bit here 0:-55C to +128C, 1:-55C to +150C
   int digitalTemp;		// Store the digital temperature value here
   float temperature;	// Store the analog temperature value here
   
-  //Check if temperature should be 12 or 13 bits
+  // Check if temperature should be 12 or 13 bits
   openPointerRegister(CONFIG_REGISTER);	// read configuration register settings
-  // read current configuration register value
+  // Read current configuration register value
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
   extendedMode = (registerByte[1]&0x10)>>4;	// 0 - temp data will be 12 bits
@@ -363,8 +410,8 @@ float TMP102::readHighTempC(void)
   {
 	// Combine bytes to create a signed int
     digitalTemp = ((registerByte[0]) << 5) | (registerByte[1] >> 3);
-	/* Temperature data can be + or -, if it should be negative,
-	   convert 13 bit to 16 bit and use the 2s compliment. */
+	// Temperature data can be + or -, if it should be negative,
+	// convert 13 bit to 16 bit and use the 2s compliment.
     if(digitalTemp > 0xFFF)
 	{
       digitalTemp |= 0xE000;
@@ -372,10 +419,10 @@ float TMP102::readHighTempC(void)
   }
   else	// 12 bit mode
   {
-	// combine bytes to create a signed int 
+	// Combine bytes to create a signed int 
     digitalTemp = ((registerByte[0]) << 4) | (registerByte[1] >> 4);
-	/* Temperature data can be + or -, if it should be negative,
-	   convert 12 bit to 16 bit and use the 2s compliment. */
+	// Temperature data can be + or -, if it should be negative,
+	// convert 12 bit to 16 bit and use the 2s compliment.
     if(digitalTemp > 0x7FF)
 	{
       digitalTemp |= 0xF000;
@@ -407,18 +454,18 @@ void TMP102::setFault(byte faultSetting)
   // Change pointer address to configuration register (0x01)
   openPointerRegister(CONFIG_REGISTER);
   
-  // read current configuration register value
+  // Read current configuration register value
   registerByte = readRegister(0);
 
   // Load new conversion rate
-  registerByte &= 0xE7; 		// Clear F0/1 (bit 3 and 4 of first byte)
+  registerByte &= 0xE7;  // Clear F0/1 (bit 3 and 4 of first byte)
   registerByte |= faultSetting<<3;	// Shift new fault setting
 
   // Set configuration registers
   Wire.beginTransmission(_address);
   Wire.write(CONFIG_REGISTER); 	// Point to configuration register
-  Wire.write(registerByte);  // Write byte to register
-  Wire.endTransmission(); // Close communication with TMP102
+  Wire.write(registerByte);     // Write byte to register
+  Wire.endTransmission();       // Close communication with TMP102
 }
 
 
@@ -429,7 +476,7 @@ void TMP102::setAlertMode(bool mode)
   // Change pointer address to configuration register (1)
   openPointerRegister(CONFIG_REGISTER);
   
-  // read current configuration register value
+  // Read current configuration register value
   registerByte = readRegister(0);
 
   // Load new conversion rate
@@ -439,6 +486,6 @@ void TMP102::setAlertMode(bool mode)
   // Set configuration registers
   Wire.beginTransmission(_address);
   Wire.write(CONFIG_REGISTER); 	// Point to configuration register
-  Wire.write(registerByte);  // Write byte to register
-  Wire.endTransmission();  		// Close communication with TMP102
+  Wire.write(registerByte);     // Write byte to register
+  Wire.endTransmission();       // Close communication with TMP102
 }

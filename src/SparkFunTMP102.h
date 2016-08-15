@@ -1,3 +1,22 @@
+/******************************************************************************
+SparkFunTMP102.h
+SparkFunTMP102 Library Header File
+Alex Wende @ SparkFun Electronics
+Original Creation Date: April 29, 2016
+https://github.com/sparkfun/Digital_Temperature_Sensor_Breakout_-_TMP102
+
+This file prototypes the TMP102 class, implemented in SparkFunTMP102.cpp.
+
+Development environment specifics:
+	IDE: Arduino 1.6.0
+	Hardware Platform: Arduino Uno
+	TMP102 Breakout Version: 13
+
+This code is beerware; if you see me (or any other SparkFun employee) at the
+local, and you've found our code helpful, please buy us a round!
+
+Distributed as-is; no warranty is given.
+******************************************************************************/
 #ifndef TMP102_h
 #define TMP102_h
 
@@ -10,7 +29,8 @@
 class TMP102
 {
 	public:
-		TMP102(byte adbegindress);	// Initialize TMP102 sensor at given address
+		TMP102(byte address);	// Initialize TMP102 sensor at given address
+		void begin(void);  // Join I2C bus
 		float readTempC(void);	// Returns the temperature in degrees C
 		float readTempF(void);	// Converts readTempC result to degrees F
 		void sleep(void);	// Switch sensor to low power mode
@@ -20,10 +40,10 @@ class TMP102
 		void setHighTempC(float temperature); // Sets T_HIGH (degrees C) alert threshold
 		void setLowTempF(float temperature);  // Sets T_LOW (degrees F) alert threshold
 		void setHighTempF(float temperature); // Sets T_HIGH (degrees F) alert threshold
-		float readLowTempC(void);	// reads T_LOW register in C
-		float readHighTempC(void);	// reads T_HIGH register in C
-		float readLowTempF(void);	// reads T_LOW register in F
-		float readHighTempF(void);	// reads T_HIGH register in F
+		float readLowTempC(void);	// Reads T_LOW register in C
+		float readHighTempC(void);	// Reads T_HIGH register in C
+		float readLowTempF(void);	// Reads T_LOW register in F
+		float readHighTempF(void);	// Reads T_HIGH register in F		
 		
 		// Set the conversion rate (0-3)
 		// 0 - 0.25 Hz

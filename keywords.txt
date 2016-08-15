@@ -10,6 +10,7 @@ TMP102	KEYWORD1
 # Methods and Functions
 ######################################################################
 
+begin	KEYWORD2
 readTempC	KEYWORD2
 readTempF	KEYWORD2
 sleep	KEYWORD2
