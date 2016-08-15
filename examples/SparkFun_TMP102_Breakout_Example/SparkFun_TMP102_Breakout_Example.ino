@@ -11,7 +11,7 @@ reading from the configuration register.
 
 Resources:
 Wire.h (included with Arduino IDE)
-TMP102.h
+SparkFunTMP102.h
 
 Development environment specifics:
 Arduino 1.0+
