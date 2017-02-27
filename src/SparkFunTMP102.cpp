@@ -29,7 +29,7 @@ Distributed as-is; no warranty is given.
 
 
 
-TMP102::TMP102(byte address)
+TMP102::TMP102(uint8_t address)
 {
   _address = address;
 }
@@ -40,7 +40,7 @@ void TMP102::begin(void)
 }
 
 
-void TMP102::openPointerRegister(byte pointerReg)
+void TMP102::openPointerRegister(uint8_t pointerReg)
 { 
   Wire.beginTransmission(_address); // Connect to TMP102
   Wire.write(pointerReg); // Open specified register
@@ -48,8 +48,8 @@ void TMP102::openPointerRegister(byte pointerReg)
 }
 
 
-byte TMP102::readRegister(bool registerNumber){  
-  int registerByte[2];	// We'll store the data from the registers here
+uint8_t TMP102::readRegister(bool registerNumber){  
+  uint8_t registerByte[2];	// We'll store the data from the registers here
   
   // Read current configuration register value
   Wire.requestFrom(_address, 2); 	// Read two bytes from TMP102
@@ -63,8 +63,8 @@ byte TMP102::readRegister(bool registerNumber){
 
 float TMP102::readTempC(void)
 {
-  int registerByte[2];	// Store the data from the register here
-  int digitalTemp;  // Temperature stored in TMP102 register
+  uint8_t registerByte[2];	// Store the data from the register here
+  int16_t digitalTemp;  // Temperature stored in TMP102 register
   
   // Read Temperature
   // Change pointer address to temperature register (0)
@@ -107,9 +107,9 @@ float TMP102::readTempF(void)
 }
 
 
-void TMP102::setConversionRate(byte rate)
+void TMP102::setConversionRate(uint8_t rate)
 {
-  int registerByte[2]; // Store the data from the register here
+  uint8_t registerByte[2]; // Store the data from the register here
   rate = rate&0x03; // Make sure rate is not set higher than 3.
   
   // Change pointer address to configuration register (0x01)
@@ -134,7 +134,7 @@ void TMP102::setConversionRate(byte rate)
 
 void TMP102::setExtendedMode(bool mode) 
 {
-  int registerByte[2]; // Store the data from the register here
+  uint8_t registerByte[2]; // Store the data from the register here
 
   // Change pointer address to configuration register (0x01)
   openPointerRegister(CONFIG_REGISTER);
@@ -158,7 +158,7 @@ void TMP102::setExtendedMode(bool mode)
 
 void TMP102::sleep(void)
 {
-  byte registerByte; // Store the data from the register here
+  uint8_t registerByte; // Store the data from the register here
 
   // Change pointer address to configuration register (0x01)
   openPointerRegister(CONFIG_REGISTER);
@@ -178,7 +178,7 @@ void TMP102::sleep(void)
 
 void TMP102::wakeup(void)
 {
-  byte registerByte; // Store the data from the register here
+  uint8_t registerByte; // Store the data from the register here
 
   // Change pointer address to configuration register (1)
   openPointerRegister(CONFIG_REGISTER);
@@ -198,7 +198,7 @@ void TMP102::wakeup(void)
 
 void TMP102::setAlertPolarity(bool polarity)
 {
-  byte registerByte; // Store the data from the register here
+  uint8_t registerByte; // Store the data from the register here
 
   // Change pointer address to configuration register (1)
   openPointerRegister(CONFIG_REGISTER);
@@ -220,7 +220,7 @@ void TMP102::setAlertPolarity(bool polarity)
 
 bool TMP102::alert(void)
 {
-  byte registerByte; // Store the data from the register here
+  uint8_t registerByte; // Store the data from the register here
 
   // Change pointer address to configuration register (1)
   openPointerRegister(CONFIG_REGISTER);
@@ -235,7 +235,7 @@ bool TMP102::alert(void)
 
 void TMP102::setLowTempC(float temperature)
 {
-  int registerByte[2];	// Store the data from the register here
+  uint8_t registerByte[2];	// Store the data from the register here
   bool extendedMode;	// Store extended mode bit here 0:-55C to +128C, 1:-55C to +150C
   
   // Prevent temperature from exceeding 150C or -55C
@@ -283,7 +283,7 @@ void TMP102::setLowTempC(float temperature)
 
 void TMP102::setHighTempC(float temperature)
 {
-  int registerByte[2];	// Store the data from the register here
+  uint8_t registerByte[2];	// Store the data from the register here
   bool extendedMode;	// Store extended mode bit here 0:-55C to +128C, 1:-55C to +150C
   
   // Prevent temperature from exceeding 150C
@@ -345,9 +345,9 @@ void TMP102::setHighTempF(float temperature)
 
 float TMP102::readLowTempC(void)
 {
-  int registerByte[2];	// Store the data from the register here
+  uint8_t registerByte[2];	// Store the data from the register here
   bool extendedMode;	// Store extended mode bit here 0:-55C to +128C, 1:-55C to +150C
-  int digitalTemp;		// Store the digital temperature value here
+  int16_t digitalTemp;		// Store the digital temperature value here
   float temperature;	// Store the analog temperature value here
   
   // Check if temperature should be 12 or 13 bits
@@ -390,9 +390,9 @@ float TMP102::readLowTempC(void)
 
 float TMP102::readHighTempC(void)
 {
-  int registerByte[2];	// Store the data from the register here
+  uint8_t registerByte[2];	// Store the data from the register here
   bool extendedMode;	// Store extended mode bit here 0:-55C to +128C, 1:-55C to +150C
-  int digitalTemp;		// Store the digital temperature value here
+  int16_t digitalTemp;		// Store the digital temperature value here
   float temperature;	// Store the analog temperature value here
   
   // Check if temperature should be 12 or 13 bits
@@ -445,9 +445,9 @@ float TMP102::readHighTempF(void)
 }
 
 
-void TMP102::setFault(byte faultSetting)
+void TMP102::setFault(uint8_t faultSetting)
 {
-  byte registerByte; // Store the data from the register here
+  uint8_t registerByte; // Store the data from the register here
 
   faultSetting = faultSetting&3; // Make sure rate is not set higher than 3.
   
@@ -471,7 +471,7 @@ void TMP102::setFault(byte faultSetting)
 
 void TMP102::setAlertMode(bool mode)
 {
-  byte registerByte; // Store the data from the register here
+  uint8_t registerByte; // Store the data from the register here
   
   // Change pointer address to configuration register (1)
   openPointerRegister(CONFIG_REGISTER);
