@@ -20,7 +20,6 @@ local, and you've found our code helpful, please buy us a round!
 Distributed as-is; no warranty is given.
 ******************************************************************************/
 #include "SparkFunTMP102.h"
-#include <Wire.h>
 
 #define TEMPERATURE_REGISTER 0x00
 #define CONFIG_REGISTER 0x01
