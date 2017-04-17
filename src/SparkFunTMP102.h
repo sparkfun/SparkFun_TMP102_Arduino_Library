@@ -77,7 +77,7 @@ class TMP102
 	private:
 		int _address; // Address of Temperature sensor (0x48,0x49,0x4A,0x4B)
 		void openPointerRegister(byte pointerReg); // Changes the pointer register
-		byte readRegister(bool registerNumber);	// reads 1 byte of from register
+		byte TMP102::readRegisters(uint8_t *registerBytes);  // reads 2 bytes from register
 };
 
 
