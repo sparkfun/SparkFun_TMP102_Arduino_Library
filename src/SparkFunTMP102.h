@@ -20,12 +20,21 @@ Distributed as-is; no warranty is given.
 #ifndef TMP102_h
 #define TMP102_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
- #include "Arduino.h"
+// This library can now be built for Particle Photo, Partical Electron, and Bluz
+#if PLATFORM_ID == 103 || PLATFORM_ID == 10 || PLATFORM_ID == 6
+	#include "spark_wiring_usbserial.h"
+	#include "spark_wiring_i2c.h"
+	#include "spark_wiring_constants.h"
 #else
- #include "WProgram.h"
+	// Arduino Platforms
+	#if defined(ARDUINO) && ARDUINO >= 100
+ 		#include "Arduino.h"
+	#else
+ 		#include "WProgram.h"
+	#endif
+	#include "Wire.h"
 #endif
-#include <Wire.h>
+
 class TMP102
 {
 	public:
