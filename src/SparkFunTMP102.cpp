@@ -52,8 +52,8 @@ uint8_t TMP102::readRegister(bool registerNumber){
   uint8_t registerByte[2];	// We'll store the data from the registers here
   
   // Read current configuration register value
-  Wire.requestFrom(_address, 2); 	// Read two bytes from TMP102
   Wire.endTransmission();
+  Wire.requestFrom(_address, 2); 	// Read two bytes from TMP102
   registerByte[0] = (Wire.read());	// Read first byte
   registerByte[1] = (Wire.read());	// Read second byte
   
