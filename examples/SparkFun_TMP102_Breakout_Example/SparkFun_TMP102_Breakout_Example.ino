@@ -41,6 +41,7 @@ TMP102 sensor0(0x48); // Initialize sensor at I2C address 0x48
 //  SCL - 0x4B
 
 void setup() {
+  Wire.begin(); //Join I2C Address
   Serial.begin(9600); // Start serial communication at 9600 baud
   pinMode(ALERT_PIN,INPUT);  // Declare alertPin as an input
   sensor0.begin();  // Join I2C bus
