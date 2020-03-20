@@ -20,30 +20,34 @@ local, and you've found our code helpful, please buy us a round!
 Distributed as-is; no warranty is given.
 ******************************************************************************/
 #include "SparkFunTMP102.h"
-#include <Wire.h>
 
 #define TEMPERATURE_REGISTER 0x00
 #define CONFIG_REGISTER 0x01
 #define T_LOW_REGISTER 0x02
 #define T_HIGH_REGISTER 0x03
 
-
-
-TMP102::TMP102(uint8_t address)
+uint8_t TMP102::begin(uint8_t deviceAddress, TwoWire &wirePort)
 {
-  _address = address;
-}
+  _address = deviceAddress; //If provided, store the I2C address from user
+  _i2cPort = &wirePort; //Grab which port the user wants us to use
 
-void TMP102::begin(void)
-{
+  _i2cPort->beginTransmission(_address);
+
+  uint8_t error = _i2cPort->endTransmission();
+
+  if(error == 0)
+  {
+	return true; //Device online!
+  }
+  else return false; //Device not attached?
 }
 
 
 void TMP102::openPointerRegister(uint8_t pointerReg)
 { 
-  Wire.beginTransmission(_address); // Connect to TMP102
-  Wire.write(pointerReg); // Open specified register
-  Wire.endTransmission(); // Close communication with TMP102
+  _i2cPort->beginTransmission(_address); // Connect to TMP102
+  _i2cPort->write(pointerReg); // Open specified register
+  _i2cPort->endTransmission(); // Close communication with TMP102
 }
 
 
@@ -51,9 +55,9 @@ uint8_t TMP102::readRegister(bool registerNumber){
   uint8_t registerByte[2];	// We'll store the data from the registers here
   
   // Read current configuration register value
-  Wire.requestFrom(_address, 2); 	// Read two bytes from TMP102
-  registerByte[0] = (Wire.read());	// Read first byte
-  registerByte[1] = (Wire.read());	// Read second byte
+  _i2cPort->requestFrom(_address, 2); 	// Read two bytes from TMP102
+  registerByte[0] = (_i2cPort->read());	// Read first byte
+  registerByte[1] = (_i2cPort->read());	// Read second byte
   
   return registerByte[registerNumber];
 }
@@ -122,11 +126,11 @@ void TMP102::setConversionRate(uint8_t rate)
   registerByte[1] |= rate<<6;	// Shift in new conversion rate
 
   // Set configuration registers
-  Wire.beginTransmission(_address);
-  Wire.write(CONFIG_REGISTER); 	// Point to configuration register
-  Wire.write(registerByte[0]);  // Write first byte
-  Wire.write(registerByte[1]);  // Write second byte
-  Wire.endTransmission();  		// Close communication with TMP102
+  _i2cPort->beginTransmission(_address);
+  _i2cPort->write(CONFIG_REGISTER); 	// Point to configuration register
+  _i2cPort->write(registerByte[0]);  // Write first byte
+  _i2cPort->write(registerByte[1]);  // Write second byte
+  _i2cPort->endTransmission();  		// Close communication with TMP102
 }
 
 
@@ -146,11 +150,11 @@ void TMP102::setExtendedMode(bool mode)
   registerByte[1] |= mode<<4;	// Shift in new exentended mode bit
 
   // Set configuration registers
-  Wire.beginTransmission(_address);
-  Wire.write(CONFIG_REGISTER);	// Point to configuration register
-  Wire.write(registerByte[0]);	// Write first byte
-  Wire.write(registerByte[1]); 	// Write second byte
-  Wire.endTransmission(); 		// Close communication with TMP102
+  _i2cPort->beginTransmission(_address);
+  _i2cPort->write(CONFIG_REGISTER);	// Point to configuration register
+  _i2cPort->write(registerByte[0]);	// Write first byte
+  _i2cPort->write(registerByte[1]); 	// Write second byte
+  _i2cPort->endTransmission(); 		// Close communication with TMP102
 }
 
 
@@ -167,10 +171,10 @@ void TMP102::sleep(void)
   registerByte |= 0x01;	// Set SD (bit 0 of first byte)
 
   // Set configuration register
-  Wire.beginTransmission(_address);
-  Wire.write(CONFIG_REGISTER);	// Point to configuration register
-  Wire.write(registerByte);     // Write first byte
-  Wire.endTransmission(); 	    // Close communication with TMP102
+  _i2cPort->beginTransmission(_address);
+  _i2cPort->write(CONFIG_REGISTER);	// Point to configuration register
+  _i2cPort->write(registerByte);     // Write first byte
+  _i2cPort->endTransmission(); 	    // Close communication with TMP102
 }
 
 
@@ -187,10 +191,10 @@ void TMP102::wakeup(void)
   registerByte &= 0xFE;	// Clear SD (bit 0 of first byte)
 
   // Set configuration registers
-  Wire.beginTransmission(_address);
-  Wire.write(CONFIG_REGISTER);	// Point to configuration register
-  Wire.write(registerByte);	    // Write first byte
-  Wire.endTransmission(); 	    // Close communication with TMP102
+  _i2cPort->beginTransmission(_address);
+  _i2cPort->write(CONFIG_REGISTER);	// Point to configuration register
+  _i2cPort->write(registerByte);	    // Write first byte
+  _i2cPort->endTransmission(); 	    // Close communication with TMP102
 }
 
 
@@ -209,10 +213,10 @@ void TMP102::setAlertPolarity(bool polarity)
   registerByte |= polarity<<2;  // Shift in new POL bit
 
   // Set configuration register
-  Wire.beginTransmission(_address);
-  Wire.write(CONFIG_REGISTER);	// Point to configuration register
-  Wire.write(registerByte);	    // Write first byte
-  Wire.endTransmission(); 	    // Close communication with TMP102
+  _i2cPort->beginTransmission(_address);
+  _i2cPort->write(CONFIG_REGISTER);	// Point to configuration register
+  _i2cPort->write(registerByte);	    // Write first byte
+  _i2cPort->endTransmission(); 	    // Close communication with TMP102
 }
 
 
@@ -271,11 +275,11 @@ void TMP102::setLowTempC(float temperature)
   }
   
   // Write to T_LOW Register
-  Wire.beginTransmission(_address);
-  Wire.write(T_LOW_REGISTER); 	// Point to T_LOW
-  Wire.write(registerByte[0]);  // Write first byte
-  Wire.write(registerByte[1]);  // Write second byte
-  Wire.endTransmission();  		// Close communication with TMP102
+  _i2cPort->beginTransmission(_address);
+  _i2cPort->write(T_LOW_REGISTER); 	// Point to T_LOW
+  _i2cPort->write(registerByte[0]);  // Write first byte
+  _i2cPort->write(registerByte[1]);  // Write second byte
+  _i2cPort->endTransmission();  		// Close communication with TMP102
 }
 
 
@@ -319,11 +323,11 @@ void TMP102::setHighTempC(float temperature)
   }
   
   // Write to T_HIGH Register
-  Wire.beginTransmission(_address);
-  Wire.write(T_HIGH_REGISTER); 	// Point to T_HIGH register
-  Wire.write(registerByte[0]);  // Write first byte
-  Wire.write(registerByte[1]);  // Write second byte
-  Wire.endTransmission();  		// Close communication with TMP102
+  _i2cPort->beginTransmission(_address);
+  _i2cPort->write(T_HIGH_REGISTER); 	// Point to T_HIGH register
+  _i2cPort->write(registerByte[0]);  // Write first byte
+  _i2cPort->write(registerByte[1]);  // Write second byte
+  _i2cPort->endTransmission();  		// Close communication with TMP102
 }
 
 
@@ -460,10 +464,10 @@ void TMP102::setFault(uint8_t faultSetting)
   registerByte |= faultSetting<<3;	// Shift new fault setting
 
   // Set configuration registers
-  Wire.beginTransmission(_address);
-  Wire.write(CONFIG_REGISTER); 	// Point to configuration register
-  Wire.write(registerByte);     // Write byte to register
-  Wire.endTransmission();       // Close communication with TMP102
+  _i2cPort->beginTransmission(_address);
+  _i2cPort->write(CONFIG_REGISTER); 	// Point to configuration register
+  _i2cPort->write(registerByte);     // Write byte to register
+  _i2cPort->endTransmission();       // Close communication with TMP102
 }
 
 
@@ -482,8 +486,8 @@ void TMP102::setAlertMode(bool mode)
   registerByte |= mode<<1;	// Shift in new TM bit
 
   // Set configuration registers
-  Wire.beginTransmission(_address);
-  Wire.write(CONFIG_REGISTER); 	// Point to configuration register
-  Wire.write(registerByte);     // Write byte to register
-  Wire.endTransmission();       // Close communication with TMP102
+  _i2cPort->beginTransmission(_address);
+  _i2cPort->write(CONFIG_REGISTER); 	// Point to configuration register
+  _i2cPort->write(registerByte);     // Write byte to register
+  _i2cPort->endTransmission();       // Close communication with TMP102
 }

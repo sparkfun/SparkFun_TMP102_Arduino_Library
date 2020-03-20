@@ -20,17 +20,19 @@ Distributed as-is; no warranty is given.
 #ifndef TMP102_h
 #define TMP102_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
- #include "Arduino.h"
+#if (ARDUINO >= 100)
+#include "Arduino.h"
 #else
- #include "WProgram.h"
+#include "WProgram.h"
 #endif
+
 #include <Wire.h>
+
+
 class TMP102
 {
 	public:
-		TMP102(byte address);	// Initialize TMP102 sensor at given address
-		void begin(void);  // Join I2C bus
+		uint8_t begin(uint8_t deviceAddress = 0x48, TwoWire &wirePort = Wire);
 		float readTempC(void);	// Returns the temperature in degrees C
 		float readTempF(void);	// Converts readTempC result to degrees F
 		void sleep(void);	// Switch sensor to low power mode
@@ -75,7 +77,11 @@ class TMP102
 		void setAlertMode(bool mode);
 		
 	private:
+		//I-squared-C Class
+		TwoWire *_i2cPort; //The generic connection to user's chosen I2C hardware
+		//Variables
 		int _address; // Address of Temperature sensor (0x48,0x49,0x4A,0x4B)
+		
 		void openPointerRegister(byte pointerReg); // Changes the pointer register
 		byte readRegister(bool registerNumber);	// reads 1 byte of from register
 };

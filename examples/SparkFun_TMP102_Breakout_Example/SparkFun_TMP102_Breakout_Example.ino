@@ -15,7 +15,6 @@ SparkFunTMP102.h
 
 Development environment specifics:
 Arduino 1.0+
-Hardware Version 13
 
 This code is beerware; if you see me (or any other SparkFun employee) at
 the local, and you've found our code helpful, please buy us a round!
@@ -23,8 +22,11 @@ the local, and you've found our code helpful, please buy us a round!
 Distributed as-is; no warranty is given.   
 ******************************************************************************/
 
+// Include the SparkFun TMP102 library.
+// Click here to get the library: http://librarymanager/All#SparkFun_TMP102
+
 #include <Wire.h> // Used to establied serial communication on the I2C bus
-#include "SparkFunTMP102.h" // Used to send and recieve specific information from our sensor
+#include <SparkFunTMP102.h> // Used to send and recieve specific information from our sensor
 
 // Connections
 // VCC = 3.3V
@@ -33,7 +35,7 @@ Distributed as-is; no warranty is given.
 // SCL = A5
 const int ALERT_PIN = A3;
 
-TMP102 sensor0(0x48); // Initialize sensor at I2C address 0x48
+TMP102 sensor0; // Initialize sensor at I2C address 0x48
 // Sensor address can be changed with an external jumper to:
 // ADD0 - Address
 //  VCC - 0x49
@@ -41,10 +43,26 @@ TMP102 sensor0(0x48); // Initialize sensor at I2C address 0x48
 //  SCL - 0x4B
 
 void setup() {
+  Serial.begin(115200);
   Wire.begin(); //Join I2C Address
-  Serial.begin(9600); // Start serial communication at 9600 baud
+  
   pinMode(ALERT_PIN,INPUT);  // Declare alertPin as an input
-  sensor0.begin();  // Join I2C bus
+  
+  /* The TMP102 uses the default settings with the address 0x48 using Wire.
+  
+     Optionally, if the address jumpers are modified, or using a different I2C bus,
+	 these parameters can be changed here. E.g. sensor0.begin(0x49,Wire1)
+	 
+	 It will return true on success or false on failure to communicate. */
+  if(!sensor0.begin())
+  {
+    Serial.println("Cannot connect to TMP102.");
+    Serial.println("Is the board connected? Is the device ID correct?");
+    while(1);
+  }
+  
+  Serial.println("Connected to TMP102!");
+  delay(100);
 
   // Initialize sensor0 settings
   // These settings are saved in the sensor, even if it loses power
