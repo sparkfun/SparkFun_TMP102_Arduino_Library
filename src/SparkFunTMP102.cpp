@@ -74,6 +74,11 @@ float TMP102::readTempC(void)
   // Read from temperature register
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
+  
+  if(registerByte[0] == 0xFF && registerByte[1] == 0xFF)
+  {
+	return NAN;
+  }
 
   // Bit 0 of second byte will always be 0 in 12-bit readings and 1 in 13-bit
   if(registerByte[1]&0x01)	// 13 bit mode
@@ -363,6 +368,11 @@ float TMP102::readLowTempC(void)
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
   
+  if(registerByte[0] == 0xFF && registerByte[1] == 0xFF)
+  {
+	return NAN;
+  }
+  
   if(extendedMode)	// 13 bit mode
   {
 	// Combine bytes to create a signed int
@@ -407,6 +417,11 @@ float TMP102::readHighTempC(void)
   openPointerRegister(T_HIGH_REGISTER);
   registerByte[0] = readRegister(0);
   registerByte[1] = readRegister(1);
+  
+  if(registerByte[0] == 0xFF && registerByte[1] == 0xFF)
+  {
+	return NAN;
+  }
   
   if(extendedMode)	// 13 bit mode
   {
