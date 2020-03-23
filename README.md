@@ -19,7 +19,7 @@ Documentation
 
 * **[Installing an Arduino Library Guide](https://learn.sparkfun.com/tutorials/installing-an-arduino-library)** - Basic information on how to install an Arduino library.
 * **[Product Repository](https://github.com/sparkfun/Digital_Temperature_Sensor_Breakout_-_TMP102)** - Main repository (including hardware files) for the TMP102 Breakout.
-* **[TMP102 Breakout Hookup Guide](https://learn.sparkfun.com/tutorials/tmp102-hookup-guide)** - Basic hookup guide for the TMP102 Breakout.
+* **[TMP102 Breakout Hookup Guide](https://learn.sparkfun.com/tutorials/tmp102-digital-temperature-sensor-hookup-guide)** - Basic hookup guide for the TMP102 Breakout.
 
 Products that use this Library
 ---------------------------------
