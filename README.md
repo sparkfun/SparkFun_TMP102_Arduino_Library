@@ -1,9 +1,22 @@
 SparkFun TMP102 Arduino Library
 ======================
 
-[![Breakout Board ISO](https://cdn.sparkfun.com/assets/parts/1/0/5/9/3/13314-01a.jpg)](https://www.sparkfun.com/products/13314)
-
-_[TMP102 Breakout Board (SEN-11931)](https://www.sparkfun.com/products/13314)_
+<table class="table table-hover table-striped table-bordered">
+    <tr>
+        <th class="text-center"> 
+        </th>
+        <th class="text-center">
+        </th>
+    </tr>
+    <tr align="center">
+        <td><a href="https://www.sparkfun.com/products/11931"><img src="https://cdn.sparkfun.com/assets/parts/1/0/5/9/3/13314-01a.jpg" alt=""></a></td>
+        <td><a href="https://www.sparkfun.com/products/16304"><img src="https://cdn.sparkfun.com/r/500-500/assets/parts/1/5/0/0/7/16304-SparkFun_Digital_Temperature_Sensor_-_TMP102__Qwiic_-01.jpg" alt=""></a></td>
+    </tr>
+    <tr align="center">
+        <td>TMP102 Breakout Board (SEN-11931)</td>
+        <td>Digital Temperature Sensor - TMP102 (Qwiic) (SEN-16304)</td>
+    </tr>
+</table>
 
 This is a breakout board for Texas Instruments's TMP102 -- temperature sensor.
 
