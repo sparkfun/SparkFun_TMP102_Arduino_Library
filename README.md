@@ -18,7 +18,7 @@ SparkFun TMP102 Arduino Library
     </tr>
 </table>
 
-This is a breakout board for Texas Instruments's TMP102 -- temperature sensor.
+These are breakout boards for Texas Instruments's TMP102 -- temperature sensor.
 
 Repository Contents
 -------------------
@@ -31,13 +31,17 @@ Documentation
 --------------
 
 * **[Installing an Arduino Library Guide](https://learn.sparkfun.com/tutorials/installing-an-arduino-library)** - Basic information on how to install an Arduino library.
-* **[Product Repository](https://github.com/sparkfun/Digital_Temperature_Sensor_Breakout_-_TMP102)** - Main repository (including hardware files) for the TMP102 Breakout.
+* **[Digital Temperature Sensor (SEN-11931) Product Repository](https://github.com/sparkfun/Digital_Temperature_Sensor_Breakout_-_TMP102)** - Main repository (including hardware files) for the TMP102 Breakout.
 * **[TMP102 Breakout Hookup Guide](https://learn.sparkfun.com/tutorials/tmp102-digital-temperature-sensor-hookup-guide)** - Basic hookup guide for the TMP102 Breakout.
+* **[Qwiic Digital Temperature Sensor - TMP102 (SEN-16304) Product Repository](https://github.com/sparkfun/Temperature_Sensor_TMP102_Qwiic)** - Main repository (including hardware files) for the TMP102 Qwiic Breakout.
+* **[Qwiic Digital Temperature Sensor - TMP102 Hookup Guide](https://learn.sparkfun.com/tutorials/sparkfun-qwiic-digital-temperature-sensor---tmp102-hookup-guide)** - Basic hookup guide for the Qwiic TMP102 Breakout.
+
 
 Products that use this Library
 ---------------------------------
 
 * [SEN-11931](https://www.sparkfun.com/products/13314)- TMP102 Breakout board.
+* [SEN-16304](https://www.sparkfun.com/products/16304)- Qwiic Digital Temperature Sensor - TMP102
 
 
 License Information
