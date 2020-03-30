@@ -35,16 +35,11 @@ Distributed as-is; no warranty is given.
 // SCL = A5
 const int ALERT_PIN = A3;
 
-TMP102 sensor0; // Initialize sensor at I2C address 0x48
-// Sensor address can be changed with an external jumper to:
-// ADD0 - Address
-//  VCC - 0x49
-//  SDA - 0x4A
-//  SCL - 0x4B
+TMP102 sensor0;
 
 void setup() {
   Serial.begin(115200);
-  Wire.begin(); //Join I2C Address
+  Wire.begin(); //Join I2C Bus
   
   pinMode(ALERT_PIN,INPUT);  // Declare alertPin as an input
   
@@ -64,9 +59,7 @@ void setup() {
   Serial.println("Connected to TMP102!");
   delay(100);
 
-  // Initialize sensor0 settings
-  // These settings are saved in the sensor, even if it loses power
-  
+  // Initialize sensor0 settings  
   // set the number of consecutive faults before triggering alarm.
   // 0-3: 0:1 fault, 1:2 faults, 2:4 faults, 3:6 faults.
   sensor0.setFault(0);  // Trigger alarm immediately

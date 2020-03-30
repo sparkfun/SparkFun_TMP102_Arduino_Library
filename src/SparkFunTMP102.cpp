@@ -4,15 +4,11 @@ SparkFunTMP102 Library Source File
 Alex Wende @ SparkFun Electronics
 Original Creation Date: April 29, 2016
 https://github.com/sparkfun/Digital_Temperature_Sensor_Breakout_-_TMP102
+https://github.com/sparkfun/Temperature_Sensor_TMP102_Qwiic
 
 This file implements all functions of the TMP102 class. Functions here range
 from reading the temperature from the sensor, to reading and writing various
 settings in the sensor.
-
-Development environment specifics:
-	IDE: Arduino 1.6
-	Hardware Platform: Arduino Uno
-	LSM9DS1 Breakout Version: 1.0
 
 This code is beerware; if you see me (or any other SparkFun employee) at the
 local, and you've found our code helpful, please buy us a round!
@@ -26,7 +22,7 @@ Distributed as-is; no warranty is given.
 #define T_LOW_REGISTER 0x02
 #define T_HIGH_REGISTER 0x03
 
-uint8_t TMP102::begin(uint8_t deviceAddress, TwoWire &wirePort)
+bool TMP102::begin(uint8_t deviceAddress, TwoWire &wirePort)
 {
   _address = deviceAddress; //If provided, store the I2C address from user
   _i2cPort = &wirePort; //Grab which port the user wants us to use

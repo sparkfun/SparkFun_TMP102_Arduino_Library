@@ -4,13 +4,9 @@ SparkFunTMP102 Library Header File
 Alex Wende @ SparkFun Electronics
 Original Creation Date: April 29, 2016
 https://github.com/sparkfun/Digital_Temperature_Sensor_Breakout_-_TMP102
+https://github.com/sparkfun/Temperature_Sensor_TMP102_Qwiic
 
 This file prototypes the TMP102 class, implemented in SparkFunTMP102.cpp.
-
-Development environment specifics:
-	IDE: Arduino 1.6.0
-	Hardware Platform: Arduino Uno
-	TMP102 Breakout Version: 13
 
 This code is beerware; if you see me (or any other SparkFun employee) at the
 local, and you've found our code helpful, please buy us a round!
@@ -32,7 +28,10 @@ Distributed as-is; no warranty is given.
 class TMP102
 {
 	public:
-		uint8_t begin(uint8_t deviceAddress = 0x48, TwoWire &wirePort = Wire);
+		// Set the I2C address and Bus
+		// Device ID: 0x48-GND (default), 0x49-VCC, 0x4A-SDA, 0x4B-SCL
+		// Sets the I2C bus (Wire by default)
+		bool begin(uint8_t deviceAddress = 0x48, TwoWire &wirePort = Wire);
 		float readTempC(void);	// Returns the temperature in degrees C
 		float readTempF(void);	// Converts readTempC result to degrees F
 		void sleep(void);	// Switch sensor to low power mode
@@ -52,7 +51,7 @@ class TMP102
 		// 1 - 1 Hz
 		// 2 - 4 Hz (default)
 		// 3 - 8 Hz
-		void setConversionRate(byte rate);
+		void setConversionRate(uint8_t rate);
 		
 		// Enable or disable extended mode
 		// 0 - disabled (-55C to +128C)
@@ -69,7 +68,7 @@ class TMP102
 		// 1 - 2 faults
 		// 2 - 4 faults
 		// 3 - 6 faults
-		void setFault(byte faultSetting);
+		void setFault(uint8_t faultSetting);
 		
 		// Set Alert type
 		// 0 - Comparator Mode: Active from temp > T_HIGH until temp < T_LOW
@@ -82,8 +81,8 @@ class TMP102
 		//Variables
 		int _address; // Address of Temperature sensor (0x48,0x49,0x4A,0x4B)
 		
-		void openPointerRegister(byte pointerReg); // Changes the pointer register
-		byte readRegister(bool registerNumber);	// reads 1 byte of from register
+		void openPointerRegister(uint8_t pointerReg); // Changes the pointer register
+		uint8_t readRegister(bool registerNumber);	// reads 1 byte of from register
 };
 
 
