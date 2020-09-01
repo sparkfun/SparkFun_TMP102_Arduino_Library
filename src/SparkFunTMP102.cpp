@@ -235,6 +235,34 @@ bool TMP102::alert(void)
   return registerByte>>5;
 }
 
+bool TMP102::oneShot(bool setOneShot)
+{
+  uint8_t registerByte; // Store the data from the register here
+
+  // Read the first byte of the configuration register
+  _i2cPort->beginTransmission(_address);
+  _i2cPort->write(CONFIG_REGISTER);
+  _i2cPort->requestFrom(_address,1);
+  registerByte = _i2cPort->read();
+  
+  if(setOneShot)	//Enable one-shot by writing a 1 to the OS bit of the configuration register
+  {
+    registerByte |= (1<<7);
+	
+	// Set configuration register
+    _i2cPort->beginTransmission(_address);
+    _i2cPort->write(CONFIG_REGISTER);	// Point to configuration register
+    _i2cPort->write(registerByte);	    // Write first byte
+    _i2cPort->endTransmission(); 	    // Close communication with TMP102
+	return 0;
+  }
+  else	//Return OS bit of configuration register (0-not ready, 1-conversion complete)
+  {
+	registerByte &= (1<<7);
+    return (registerByte>>7);
+  }
+}
+
 
 void TMP102::setLowTempC(float temperature)
 {

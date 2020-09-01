@@ -17,6 +17,7 @@ readTempF	KEYWORD2
 sleep	KEYWORD2
 wakeup	KEYWORD2
 alert	KEYWORD2
+oneShot	KEYWORD2
 setLowTempC	KEYWORD2
 setHighTempC	KEYWORD2
 setLowTempF	KEYWORD2

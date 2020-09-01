@@ -37,6 +37,7 @@ class TMP102
 		void sleep(void);	// Switch sensor to low power mode
 		void wakeup(void);	// Wakeup and start running in normal power mode
 		bool alert(void);	// Returns state of Alert register
+		bool oneShot(bool setOneShot=0);	  // Sets the SingleShot Register. Returns 1 after the conversion is complete
 		void setLowTempC(float temperature);  // Sets T_LOW (degrees C) alert threshold
 		void setHighTempC(float temperature); // Sets T_HIGH (degrees C) alert threshold
 		void setLowTempF(float temperature);  // Sets T_LOW (degrees F) alert threshold
