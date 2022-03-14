@@ -285,13 +285,13 @@ void TMP102::setLowTempC(float temperature)
   // Split temperature into separate bytes
   if (extendedMode) // 13-bit mode
   {
-    registerByte[0] = int(temperature) >> 5;
-    registerByte[1] = (int(temperature) << 3);
+    registerByte[0] = (int)temperature >> 5;
+    registerByte[1] = (int)temperature << 3;
   }
   else // 12-bit mode
   {
-    registerByte[0] = int(temperature) >> 4;
-    registerByte[1] = int(temperature) << 4;
+    registerByte[0] = (int)(temperature) >> 4;
+    registerByte[1] = (int)(temperature) << 4;
   }
 
   // Write to T_LOW Register
@@ -332,13 +332,13 @@ void TMP102::setHighTempC(float temperature)
   // Split temperature into separate bytes
   if (extendedMode) // 13-bit mode
   {
-    registerByte[0] = int(temperature) >> 5;
-    registerByte[1] = (int(temperature) << 3);
+    registerByte[0] = (int)temperature >> 5;
+    registerByte[1] = (int)temperature << 3;
   }
   else // 12-bit mode
   {
-    registerByte[0] = int(temperature) >> 4;
-    registerByte[1] = int(temperature) << 4;
+    registerByte[0] = (int)temperature >> 4;
+    registerByte[1] = (int)temperature << 4;
   }
 
   // Write to T_HIGH Register
